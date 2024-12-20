@@ -1,6 +1,8 @@
 package com.nusrat.PortfolioTrackerApplication.services;
 
+import com.nusrat.PortfolioTrackerApplication.entities.Portfolio;
 import com.nusrat.PortfolioTrackerApplication.entities.Stock;
+import com.nusrat.PortfolioTrackerApplication.repositories.PortfolioRepository;
 import com.nusrat.PortfolioTrackerApplication.repositories.StockRepository;
 import com.nusrat.PortfolioTrackerApplication.util.StockPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class StockService {
     private StockRepository stockRepository;
     @Autowired
     private StockPriceService stockPriceService;
+
+    @Autowired
+    private PortfolioRepository portfolioRepository;
 
 //    public List<Stock> getAllStocks() {
 //        return stockRepository.findAll();
@@ -36,23 +41,38 @@ public class StockService {
 //                .mapToDouble(stock -> stock.getCurrentPrice() * stock.getQuantity())
 //                .sum();
 //    }
-    public double calculatePortfolioValue(List<Stock> stocks) {
-        double totalValue = 0.0;
-
-        for (Stock stock : stocks) {
-            Double currentPrice = stockPriceService.getStockPrice(stock.getTicker());
-            if (currentPrice != null) {
-                stock.setCurrentPrice(currentPrice);
-                totalValue += currentPrice * stock.getQuantity();
-            }
-        }
-
-        return totalValue;
+//    public double calculatePortfolioValue(List<Stock> stocks) {
+//        double totalValue = 0.0;
+//
+//        for (Stock stock : stocks) {
+//            Double currentPrice = stockPriceService.getStockPrice(stock.getTicker());
+//            if (currentPrice != null) {
+//                stock.setCurrentPrice(currentPrice);
+//                totalValue += currentPrice * stock.getQuantity();
+//            }
+//        }
+//
+//        return totalValue;
+//    }
+    public double calculatePortfolioValue(Long portfolioId) {
+        List<Stock> stocks = stockRepository.findByPortfolioId(portfolioId);
+        return stocks.stream()
+                .mapToDouble(stock -> {
+                    double currentPrice = stockPriceService.getStockPrice(stock.getTicker());
+                    return currentPrice * stock.getQuantity();
+                })
+                .sum();
     }
 
-    public Stock addStock(Stock stock) {
-
+    public Stock addStock(Long portfolioId, Stock stock) {
+        Portfolio portfolio = portfolioRepository.findById(portfolioId)
+                .orElseThrow(() -> new RuntimeException("Portfolio not found with ID: " + portfolioId));
+        stock.setPortfolio(portfolio);
         return stockRepository.save(stock);
+    }
+
+    public List<Stock> getStocksByPortfolio(Long portfolioId) {
+        return stockRepository.findByPortfolioId(portfolioId);
     }
 
     public Stock updateStock(Long id, Stock stock) {

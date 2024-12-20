@@ -17,25 +17,42 @@ public class StockController {
     @Autowired
     private StockService stockService;
 
-    @PostMapping("/add")
-    public ResponseEntity<Stock> addStock(@RequestBody Stock stock) {
-        Stock savedStock = stockService.addStock(stock);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedStock);
+    @PostMapping("/portfolio/{portfolioId}")
+    public ResponseEntity<Stock> addStock(
+            @PathVariable Long portfolioId,
+            @RequestBody Stock stock
+    ) {
+        Stock createdStock = stockService.addStock(portfolioId, stock);
+        return ResponseEntity.ok(createdStock);
     }
 
-    @GetMapping("/view")
-    public ResponseEntity<Map<String, Object>> getAllStocks() {
-        List<Stock> stocks = stockService.getAllStocks();
-        double totalValue = stockService.calculatePortfolioValue(stocks);
-        Map<String, Object> response = Map.of(
-                "stocks", stocks,
-                "totalValue", totalValue
-        );
-        return ResponseEntity.ok(response);
+    @GetMapping("/portfolio/{portfolioId}")
+    public ResponseEntity<List<Stock>> getStocksByPortfolio(@PathVariable Long portfolioId) {
+        List<Stock> stocks = stockService.getStocksByPortfolio(portfolioId);
+        return ResponseEntity.ok(stocks);
     }
+
+    @GetMapping("/portfolio/{portfolioId}/value")
+    public ResponseEntity<Double> getPortfolioValue(@PathVariable Long portfolioId) {
+        double portfolioValue = stockService.calculatePortfolioValue(portfolioId);
+        return ResponseEntity.ok(portfolioValue);
+    }
+
+//    @GetMapping("/view")
+//    public ResponseEntity<Map<String, Object>> getAllStocks() {
+//        List<Stock> stocks = stockService.getAllStocks();
+//        double totalValue = stockService.calculatePortfolioValue(stocks);
+//        Map<String, Object> response = Map.of(
+//                "stocks", stocks,
+//                "totalValue", totalValue
+//        );
+//        return ResponseEntity.ok(response);
+//    }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Stock> updateStock(@PathVariable Long id, @RequestBody Stock stock) {
+    public ResponseEntity<Stock> updateStock(
+            @PathVariable Long id,
+            @RequestBody Stock stock) {
         Stock updatedStock = stockService.updateStock(id, stock);
         return ResponseEntity.ok(updatedStock);
     }

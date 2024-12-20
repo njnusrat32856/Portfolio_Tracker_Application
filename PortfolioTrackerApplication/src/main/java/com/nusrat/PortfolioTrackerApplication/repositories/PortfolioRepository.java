@@ -1,14 +1,14 @@
 package com.nusrat.PortfolioTrackerApplication.repositories;
 
 import com.nusrat.PortfolioTrackerApplication.entities.Portfolio;
-import com.nusrat.PortfolioTrackerApplication.entities.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface StockRepository extends JpaRepository<Stock, Long> {
+public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
 
-    List<Stock> findByPortfolioId(Long userId);
+    List<Portfolio> findByUserId(Long userId);
 }
