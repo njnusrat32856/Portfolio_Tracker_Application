@@ -8,6 +8,7 @@ import com.nusrat.PortfolioTrackerApplication.util.StockPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -28,7 +29,7 @@ public class StockService {
     public List<Stock> getAllStocks() {
         List<Stock> stocks = stockRepository.findAll();
         stocks.forEach(stock -> {
-            Double currentPrice = stockPriceService.getStockPrice(stock.getTicker());
+            BigDecimal currentPrice = stockPriceService.getStockPrice(stock.getTicker());
             if (currentPrice != null) {
                 stock.setCurrentPrice(currentPrice);
             }
@@ -54,14 +55,31 @@ public class StockService {
 //
 //        return totalValue;
 //    }
-    public double calculatePortfolioValue(Long portfolioId) {
+    public BigDecimal calculatePortfolioValue(Long portfolioId) {
+        // Fetch all stocks in the portfolio
         List<Stock> stocks = stockRepository.findByPortfolioId(portfolioId);
-        return stocks.stream()
-                .mapToDouble(stock -> {
-                    double currentPrice = stockPriceService.getStockPrice(stock.getTicker());
-                    return currentPrice * stock.getQuantity();
-                })
-                .sum();
+
+        // Initialize total portfolio value
+        BigDecimal totalValue = BigDecimal.ZERO;
+
+        // Iterate over each stock and calculate its value
+        for (Stock stock : stocks) {
+            try {
+                // Fetch the current price for the stock
+                BigDecimal currentPrice = stockPriceService.getStockPrice(stock.getTicker());
+
+                // Calculate the stock's contribution to the portfolio
+                BigDecimal stockValue = currentPrice.multiply(BigDecimal.valueOf(stock.getQuantity()));
+
+                // Add to total portfolio value
+                totalValue = totalValue.add(stockValue);
+            } catch (Exception e) {
+                System.err.println("Error fetching price for stock: " + stock.getTicker());
+                e.printStackTrace();
+            }
+        }
+
+        return totalValue;
     }
 
     public Stock addStock(Long portfolioId, Stock stock) {

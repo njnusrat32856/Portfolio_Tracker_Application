@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -33,9 +34,9 @@ public class StockController {
     }
 
     @GetMapping("/portfolio/{portfolioId}/value")
-    public ResponseEntity<Double> getPortfolioValue(@PathVariable Long portfolioId) {
-        double portfolioValue = stockService.calculatePortfolioValue(portfolioId);
-        return ResponseEntity.ok(portfolioValue);
+    public ResponseEntity<?> getPortfolioValue(@PathVariable Long portfolioId) {
+        BigDecimal portfolioValue = stockService.calculatePortfolioValue(portfolioId);
+        return ResponseEntity.ok().body(Map.of("portfolioId", portfolioId, "totalValue", portfolioValue));
     }
 
 //    @GetMapping("/view")

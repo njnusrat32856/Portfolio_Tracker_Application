@@ -3,6 +3,8 @@ package com.nusrat.PortfolioTrackerApplication.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -27,7 +29,7 @@ public class Stock {
     @Column(nullable = false)
     private Double buyPrice;
 
-    private Double currentPrice; // Updated dynamically from API
+    private BigDecimal currentPrice; // Updated dynamically from API
 
     @ManyToOne
     @JoinColumn(name = "porfolio_id", nullable = false)
