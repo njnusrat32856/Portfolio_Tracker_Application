@@ -22,32 +22,34 @@ public class StockPriceService {
         String url = "/query?function=GLOBAL_QUOTE&symbol=" + ticker + "&apikey=" + apiKey;
 
         try {
-            String price = webClient.get()
+            // Send API request
+            String response = webClient.get()
                     .uri(url)
                     .retrieve()
                     .bodyToMono(String.class)
-                    .map(response -> parsePrice(response))
                     .block();
-            return price != null ? BigDecimal.valueOf(price) : null;
+
+            // Parse and extract stock price
+            BigDecimal price = parsePriceFromResponse(response);
+            return price;
         } catch (Exception e) {
+            // Log error and return null
             e.printStackTrace();
             return null;
         }
+//        try {
+//            String price = webClient.get()
+//                    .uri(url)
+//                    .retrieve()
+//                    .bodyToMono(String.class)
+//                    .map(response -> parsePrice(response))
+//                    .block();
+//            return price != null ? BigDecimal.valueOf(price) : null;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
     }
-
-//    private static final String API_URL = "https://www.alphavantage.co/query";
-//    private static final String API_KEY = "4FNS200FIXXE11OD";
-//
-//    public BigDecimal getStockPrice(String ticker) {
-//        String url = String.format("%s?function=GLOBAL_QUOTE&symbol=%s&apikey=%s", API_URL, ticker, API_KEY);
-//
-//        RestTemplate restTemplate = new RestTemplate();
-//        String response = restTemplate.getForObject(url, String.class);
-//
-//        // Parse the JSON response to extract the price
-//        BigDecimal currentPrice = parsePriceFromResponse(response);
-//        return currentPrice;
-//    }
 
     private BigDecimal parsePriceFromResponse(String response) {
         // Extract the current price from the JSON response
