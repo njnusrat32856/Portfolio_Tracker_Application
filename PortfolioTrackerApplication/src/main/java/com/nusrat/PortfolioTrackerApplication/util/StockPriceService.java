@@ -11,55 +11,43 @@ import java.math.BigDecimal;
 @Service
 public class StockPriceService {
 
-//    private final WebClient webClient;
-//
-//    public StockPriceService(WebClient.Builder webClientBuilder) {
-//        this.webClient = webClientBuilder.baseUrl("https://www.alphavantage.co").build();
-//    }
-//
-//    public Double getStockPrice(String ticker) {
-//        String apiKey = "4FNS200FIXXE11OD"; // Replace with your API key
-//        String url = "/query?function=GLOBAL_QUOTE&symbol=" + ticker + "&apikey=" + apiKey;
-//
-//        try {
-//            String price = webClient.get()
-//                    .uri(url)
-//                    .retrieve()
-//                    .bodyToMono(String.class)
-//                    .map(response -> parsePrice(response))
-//                    .block();
-//            return price != null ? Double.parseDouble(price) : null;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//
-//    private String parsePrice(String response) {
-//        // Parse JSON response to extract the stock price
-//        try {
-//            ObjectMapper mapper = new ObjectMapper();
-//            JsonNode rootNode = mapper.readTree(response);
-//            return rootNode.path("Global Quote").path("05. price").asText();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+    private final WebClient webClient;
 
-    private static final String API_URL = "https://www.alphavantage.co/query";
-    private static final String API_KEY = "4FNS200FIXXE11OD";
+    public StockPriceService(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.baseUrl("https://www.alphavantage.co").build();
+    }
 
     public BigDecimal getStockPrice(String ticker) {
-        String url = String.format("%s?function=GLOBAL_QUOTE&symbol=%s&apikey=%s", API_URL, ticker, API_KEY);
+        String apiKey = "4FNS200FIXXE11OD"; // Replace with your API key
+        String url = "/query?function=GLOBAL_QUOTE&symbol=" + ticker + "&apikey=" + apiKey;
 
-        RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.getForObject(url, String.class);
-
-        // Parse the JSON response to extract the price
-        BigDecimal currentPrice = parsePriceFromResponse(response);
-        return currentPrice;
+        try {
+            String price = webClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .map(response -> parsePrice(response))
+                    .block();
+            return price != null ? BigDecimal.valueOf(price) : null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
+//    private static final String API_URL = "https://www.alphavantage.co/query";
+//    private static final String API_KEY = "4FNS200FIXXE11OD";
+//
+//    public BigDecimal getStockPrice(String ticker) {
+//        String url = String.format("%s?function=GLOBAL_QUOTE&symbol=%s&apikey=%s", API_URL, ticker, API_KEY);
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//        String response = restTemplate.getForObject(url, String.class);
+//
+//        // Parse the JSON response to extract the price
+//        BigDecimal currentPrice = parsePriceFromResponse(response);
+//        return currentPrice;
+//    }
 
     private BigDecimal parsePriceFromResponse(String response) {
         // Extract the current price from the JSON response
