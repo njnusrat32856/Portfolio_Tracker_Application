@@ -28,16 +28,15 @@ public class StockController {
     }
 
     @GetMapping("/portfolio/{portfolioId}")
-    public ResponseEntity<List<Stock>> getStocksByPortfolio(@PathVariable Long portfolioId) {
-        List<Stock> stocks = stockService.getStocksByPortfolio(portfolioId);
-        return ResponseEntity.ok(stocks);
+    public ResponseEntity<List<Stock>> getStocks(@PathVariable Long portfolioId) {
+        return ResponseEntity.ok(stockService.getStocksByPortfolioId(portfolioId));
     }
 
-    @GetMapping("/portfolio/{portfolioId}/value")
-    public ResponseEntity<?> getPortfolioValue(@PathVariable Long portfolioId) {
-        BigDecimal portfolioValue = stockService.calculatePortfolioValue(portfolioId);
-        return ResponseEntity.ok().body(Map.of("portfolioId", portfolioId, "totalValue", portfolioValue));
-    }
+//    @GetMapping("/portfolio/{portfolioId}/value")
+//    public ResponseEntity<?> getPortfolioValue(@PathVariable Long portfolioId) {
+//        BigDecimal portfolioValue = stockService.calculatePortfolioValue(portfolioId);
+//        return ResponseEntity.ok().body(Map.of("portfolioId", portfolioId, "totalValue", portfolioValue));
+//    }
 
 //    @GetMapping("/view")
 //    public ResponseEntity<Map<String, Object>> getAllStocks() {

@@ -25,7 +25,7 @@ public class PortfolioService {
         return portfolioRepository.save(portfolio);
     }
 
-    public List<Portfolio> getPortfoliosByUser(Long userId) {
+    public List<Portfolio> getPortfoliosByUserId(Long userId) {
         return portfolioRepository.findByUserId(userId);
     }
 

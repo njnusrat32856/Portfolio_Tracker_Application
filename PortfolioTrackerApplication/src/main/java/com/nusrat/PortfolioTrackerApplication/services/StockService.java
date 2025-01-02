@@ -26,16 +26,16 @@ public class StockService {
 //        return stockRepository.findAll();
 //    }
 
-    public List<Stock> getAllStocks() {
-        List<Stock> stocks = stockRepository.findAll();
-        stocks.forEach(stock -> {
-            BigDecimal currentPrice = stockPriceService.getStockPrice(stock.getTicker());
-            if (currentPrice != null) {
-                stock.setCurrentPrice(currentPrice);
-            }
-        });
-        return stocks;
-    }
+//    public List<Stock> getAllStocks() {
+//        List<Stock> stocks = stockRepository.findAll();
+//        stocks.forEach(stock -> {
+//            BigDecimal currentPrice = stockPriceService.getStockPrice(stock.getTicker());
+//            if (currentPrice != null) {
+//                stock.setCurrentPrice(currentPrice);
+//            }
+//        });
+//        return stocks;
+//    }
 
     //    public double calculatePortfolioValue(List<Stock> stocks) {
 //        return stocks.stream()
@@ -55,32 +55,32 @@ public class StockService {
 //
 //        return totalValue;
 //    }
-    public BigDecimal calculatePortfolioValue(Long portfolioId) {
-        // Fetch all stocks in the portfolio
-        List<Stock> stocks = stockRepository.findByPortfolioId(portfolioId);
-
-        // Initialize total portfolio value
-        BigDecimal totalValue = BigDecimal.ZERO;
-
-        // Iterate over each stock and calculate its value
-        for (Stock stock : stocks) {
-            try {
-                // Fetch the current price for the stock
-                BigDecimal currentPrice = stockPriceService.getStockPrice(stock.getTicker());
-
-                // Calculate the stock's contribution to the portfolio
-                BigDecimal stockValue = currentPrice.multiply(BigDecimal.valueOf(stock.getQuantity()));
-
-                // Add to total portfolio value
-                totalValue = totalValue.add(stockValue);
-            } catch (Exception e) {
-                System.err.println("Error fetching price for stock: " + stock.getTicker());
-                e.printStackTrace();
-            }
-        }
-
-        return totalValue;
-    }
+//    public BigDecimal calculatePortfolioValue(Long portfolioId) {
+//        // Fetch all stocks in the portfolio
+//        List<Stock> stocks = stockRepository.findByPortfolioId(portfolioId);
+//
+//        // Initialize total portfolio value
+//        BigDecimal totalValue = BigDecimal.ZERO;
+//
+//        // Iterate over each stock and calculate its value
+//        for (Stock stock : stocks) {
+//            try {
+//                // Fetch the current price for the stock
+//                BigDecimal currentPrice = stockPriceService.getStockPrice(stock.getTicker());
+//
+//                // Calculate the stock's contribution to the portfolio
+//                BigDecimal stockValue = currentPrice.multiply(BigDecimal.valueOf(stock.getQuantity()));
+//
+//                // Add to total portfolio value
+//                totalValue = totalValue.add(stockValue);
+//            } catch (Exception e) {
+//                System.err.println("Error fetching price for stock: " + stock.getTicker());
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return totalValue;
+//    }
 
     public Stock addStock(Long portfolioId, Stock stock) {
         Portfolio portfolio = portfolioRepository.findById(portfolioId)
@@ -89,8 +89,10 @@ public class StockService {
         return stockRepository.save(stock);
     }
 
-    public List<Stock> getStocksByPortfolio(Long portfolioId) {
-        return stockRepository.findByPortfolioId(portfolioId);
+    public List<Stock> getStocksByPortfolioId(Long portfolioId) {
+        List<Stock> stocks = stockRepository.findByPortfolioId(portfolioId);
+        stocks.forEach(stock -> stock.setCurrentPrice(stockPriceService.getRealTimePrice(stock.getTicker())));
+        return stocks;
     }
 
     public Stock updateStock(Long id, Stock stock) {
