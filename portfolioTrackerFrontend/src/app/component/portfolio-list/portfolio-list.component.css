@@ -1,0 +1,14 @@
+.container {
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .list-group-item {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .list-group-item:hover {
+    background-color: #f0f8ff;
+  }
+  

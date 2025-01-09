@@ -7,6 +7,8 @@ import { PortfolioListComponent } from './component/portfolio-list/portfolio-lis
 import { PortfolioDetailsComponent } from './component/portfolio-details/portfolio-details.component';
 import { StockManagementComponent } from './component/stock-management/stock-management.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -18,10 +20,12 @@ import { DashboardComponent } from './component/dashboard/dashboard.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CommonModule,
   ],
   providers: [
-    provideClientHydration()
+    provideClientHydration(),
+    provideHttpClient(withFetch())
   ],
   bootstrap: [AppComponent]
 })

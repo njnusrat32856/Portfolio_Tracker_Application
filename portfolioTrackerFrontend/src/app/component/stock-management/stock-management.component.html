@@ -1,39 +1,49 @@
-<div class="container mt-4">
+<!-- <div class="container mt-4">
     <h2>Add Stock</h2>
-    <form (submit)="addStock()" class="form-inline">
-      <input
-        type="text"
-        placeholder="Stock Name"
-        [(ngModel)]="stock.stockName"
-        name="stockName"
-        class="form-control mr-2"
-        required
-      />
-      <input
-        type="text"
-        placeholder="Ticker"
-        [(ngModel)]="stock.ticker"
-        name="ticker"
-        class="form-control mr-2"
-        required
-      />
-      <input
-        type="number"
-        placeholder="Quantity"
-        [(ngModel)]="stock.quantity"
-        name="quantity"
-        class="form-control mr-2"
-        required
-      />
-      <input
-        type="number"
-        placeholder="Buy Price"
-        [(ngModel)]="stock.buyPrice"
-        name="buyPrice"
-        class="form-control mr-2"
-        required
-      />
-      <button class="btn btn-primary">Add Stock</button>
+    <form (submit)="addStock()" class="row g-3">
+      <div class="col-md-6">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Stock Name"
+          [(ngModel)]="stock.stockName"
+          name="stockName"
+          required
+        />
+      </div>
+      <div class="col-md-6">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Ticker"
+          [(ngModel)]="stock.ticker"
+          name="ticker"
+          required
+        />
+      </div>
+      <div class="col-md-6">
+        <input
+          type="number"
+          class="form-control"
+          placeholder="Quantity"
+          [(ngModel)]="stock.quantity"
+          name="quantity"
+          required
+        />
+      </div>
+      <div class="col-md-6">
+        <input
+          type="number"
+          class="form-control"
+          placeholder="Buy Price"
+          [(ngModel)]="stock.buyPrice"
+          name="buyPrice"
+          required
+        />
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Add Stock</button>
+      </div>
     </form>
   </div>
-  
+   -->
