@@ -1,0 +1,22 @@
+<div class="container mt-4">
+    <h2>Portfolio Details</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Stock Name</th>
+          <th>Ticker</th>
+          <th>Quantity</th>
+          <th>Buy Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stock of stocks">
+          <td>{{ stock.stockName }}</td>
+          <td>{{ stock.ticker }}</td>
+          <td>{{ stock.quantity }}</td>
+          <td>{{ stock.buyPrice | currency }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
